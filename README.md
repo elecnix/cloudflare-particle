@@ -46,6 +46,7 @@ export CLOUDFLARE_ACCOUNT_ID=your_account_id_here
 
 ## Usage
 
+### Local (uv)
 ```sh
 uv run python update_cf_access_policy.py
 ```
@@ -54,6 +55,25 @@ The script will:
 - Fetch the current Particle device-service IPs.
 - Find a reusable Cloudflare Access policy named "Particle Cloud" at the account level.
 - Update its `include` block with the latest IPs (creating the policy if it doesn't exist).
+
+### Docker
+You can run this updater in a Docker container for easy scheduling and deployment:
+
+#### Build the Docker image
+```sh
+docker build -t cf-particle .
+```
+
+#### Run the container
+```sh
+docker run -e CLOUDFLARE_API_TOKEN=your_token -e CLOUDFLARE_ACCOUNT_ID=your_account_id cf-particle
+```
+
+By default, the updater will run every 24 hours. To change the interval, set the `SLEEP_HOURS` environment variable (in hours):
+
+```sh
+docker run -e CLOUDFLARE_API_TOKEN=your_token -e CLOUDFLARE_ACCOUNT_ID=your_account_id -e SLEEP_HOURS=6 cf-particle
+```
 
 ## Scheduling
 
